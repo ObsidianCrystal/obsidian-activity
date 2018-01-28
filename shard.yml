@@ -1,0 +1,9 @@
+name: obsidian-activity
+version: 0.1.0
+
+authors:
+  - alex-lairan <lairana@free.fr>
+
+crystal: 0.24.1
+
+license: MIT
