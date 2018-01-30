@@ -10,6 +10,10 @@ class Obsidian::Activity::Circuit
     executable(@start_task)
   end
 
+  def inspect
+    %Q{#<Obsidian::Activity::Circuit @name="#{@name}">}
+  end
+
   private def executable(activity : Activity) : Signal
     signal = activity.call
 
