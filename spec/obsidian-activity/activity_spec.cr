@@ -2,9 +2,12 @@ require "../spec_helper"
 
 describe Obsidian::Activity do
   it "run proc" do
-    signal = Obsidian::Activity::Signal.new
-    activity = Obsidian::Activity.new { signal }
+    init_signal = Obsidian::Activity::Signal.new
+    activity = Obsidian::Activity.new { |data| { init_signal, data } }
 
-    activity.call.should eq(signal)
+    signal, data = activity.call(Obsidian::Activity::Data.new)
+
+    signal.should eq(init_signal)
+    data.get.should eq(0)
   end
 end

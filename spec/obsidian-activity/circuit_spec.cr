@@ -2,10 +2,10 @@ require "../spec_helper"
 
 describe Obsidian::Activity::Circuit do
   it "run proc" do
-    start  = Obsidian::Activity.new { print "Hello";  Obsidian::Activity::SUCCESS }
-    left   = Obsidian::Activity.new { print " World"; Obsidian::Activity::SUCCESS }
-    right1 = Obsidian::Activity.new { print " My";    Obsidian::Activity::SUCCESS }
-    right2 = Obsidian::Activity.new { print " Right"; Obsidian::Activity::SUCCESS }
+    start  = Obsidian::Activity.new { |data| data.inc; { Obsidian::Activity::SUCCESS, data } }
+    left   = Obsidian::Activity.new { |data| data.inc; { Obsidian::Activity::SUCCESS, data } }
+    right1 = Obsidian::Activity.new { |data| data.inc; { Obsidian::Activity::SUCCESS, data } }
+    right2 = Obsidian::Activity.new { |data| { Obsidian::Activity::SUCCESS, data } }
 
     map = {
       start => { Obsidian::Activity::SUCCESS => right1 },
@@ -14,6 +14,9 @@ describe Obsidian::Activity::Circuit do
 
     circuit = Obsidian::Activity::Circuit.new(map, [left, right2], start_task: start)
 
-    circuit.call.should eq(Obsidian::Activity::SUCCESS)
+    signal, data = circuit.call
+
+    signal.should eq(Obsidian::Activity::SUCCESS)
+    data.get.should eq(2)
   end
 end
